@@ -1,0 +1,8 @@
+{
+  "name": "user-management",
+  "version": "1.0.0",
+  "description": "User management project with DDD",
+  "main": "index.js",
+  "author": "Moises Jr <m.junior@eq.ufrj.br>",
+  "license": "MIT"
+}
