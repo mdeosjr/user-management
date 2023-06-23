@@ -1,4 +1,5 @@
 import { User } from "@domain/user";
+import { Auth } from "@domain/auth";
 
 export interface UserData {
 	name: string;
@@ -16,6 +17,11 @@ export interface AddressData {
 	cep: string;
 }
 
+interface UpdatedInfo {
+	user?: UserData;
+	address?: AddressData;
+}
+
 async function create(userData: UserData, addressData: AddressData) {
 	const { name, email, password, age } = userData;
 
@@ -23,6 +29,14 @@ async function create(userData: UserData, addressData: AddressData) {
 	await user.save();
 }
 
+async function update(updatedInfo: UpdatedInfo, token: string) {
+	const auth = new Auth();
+	auth.validate(token)
+
+	const { address, user } = updatedInfo;
+}
+
 export const userService = {
 	create,
+	update,
 };
