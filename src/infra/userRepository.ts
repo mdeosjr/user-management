@@ -1,5 +1,5 @@
-import { prisma } from "@infra/database";
 import { Address } from "@prisma/client";
+import { prisma } from "@infra/database";
 import { UserData, AddressData } from "@services/userService";
 
 async function create(userData: UserData, addressData: AddressData) {
@@ -26,6 +26,11 @@ async function create(userData: UserData, addressData: AddressData) {
 	});
 }
 
+async function get(email: string) {
+	return await prisma.user.findUnique({ where: { email } });
+}
+
 export const userRepository = {
 	create,
+	get
 };
