@@ -4,12 +4,14 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
 export class Auth {
-	email: string;
-	password: string;
+	email?: string;
+	password?: string;
+	token?: string;
 
-	constructor(email: string, password: string) {
+	constructor(email?: string, password?: string, token?: string) {
 		this.email = email;
 		this.password = password;
+		this.token = token;
 	}
 
 	async verifyUser(email: string, password: string) {
