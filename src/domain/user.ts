@@ -1,5 +1,6 @@
 import { AddressData, UserData } from "@services/userService";
 import { userRepository } from "@infra/userRepository";
+import bcrypt from "bcrypt";
 
 export class User {
 	name: string;
@@ -32,14 +33,23 @@ export class User {
 	userObject(): UserData {
 		return {
 			name: this.name,
-      email: this.email,
-      password: this.password,
-      age: this.age
-		}
+			email: this.email,
+			password: this.password,
+			age: this.age,
+		};
 	}
 
 	async save(): Promise<void> {
 		const user = this.userObject();
-		await userRepository.create(user, this.address);
+
+		const existentUser = await userRepository.get(user.email);
+		if (existentUser) throw new Error("User already exists!");
+
+		const hashPassword = bcrypt.hashSync(user.password, 8);
+
+		await userRepository.create(
+			{ ...user, password: hashPassword },
+			this.address
+		);
 	}
 }
