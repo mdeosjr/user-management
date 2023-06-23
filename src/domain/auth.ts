@@ -3,17 +3,16 @@ import { addressRepository } from "@infra/addressRepository";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
-export class Token {
+export class Auth {
 	email: string;
 	password: string;
 
 	constructor(email: string, password: string) {
-		this.validate(email, password);
 		this.email = email;
 		this.password = password;
 	}
 
-	async validate(email: string, password: string) {
+	async verifyUser(email: string, password: string) {
 		const user = await userRepository.get(email);
 
 		if (!user) throw new Error("User not found!");
@@ -21,7 +20,7 @@ export class Token {
 		const address = await addressRepository.get(user.addressId);
 
 		if (bcrypt.compareSync(password, user.password)) {
-			const data = { userId: user.id };
+			const data = { id: user.id, email: user.email };
 			const secretKey = process.env.JWT_SECRET as string;
 			const config = { expiresIn: 60 * 60 };
 
@@ -30,5 +29,20 @@ export class Token {
 		} else {
 			throw new Error("User or password mismatch!");
 		}
+	}
+
+	async validate(token: string) {
+		const secretKey = process.env.JWT_SECRET as string;
+
+		const userData = jwt.verify(token, secretKey) as {
+			id: number;
+			email: string;
+		};
+		if (!userData) throw new Error("Invalid token");
+
+		const user = await userRepository.get(userData.email);
+		if (!user) throw new Error("User not found");
+
+    return user;
 	}
 }

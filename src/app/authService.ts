@@ -1,4 +1,4 @@
-import { Token } from "@domain/token";
+import { Auth } from "@domain/auth";
 
 export interface LoginData {
 	email: string;
@@ -8,8 +8,10 @@ export interface LoginData {
 async function login(loginData: LoginData) {
 	const { email, password } = loginData;
 
-	const token = new Token(email, password);
-  return token;
+	const auth = new Auth(email, password);
+
+	const token = await auth.verifyUser(email, password);
+	return token;
 }
 
 export const authService = {
