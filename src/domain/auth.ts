@@ -45,6 +45,6 @@ export class Auth {
 		const user = await userRepository.get(userData.email);
 		if (!user) throw new Error("User not found");
 
-    return user;
+		return user;
 	}
 }

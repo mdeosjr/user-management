@@ -1,26 +1,6 @@
 import { User } from "@domain/user";
 import { Auth } from "@domain/auth";
-
-export interface UserData {
-	name: string;
-	email: string;
-	password: string;
-	age: number;
-}
-
-export interface AddressData {
-	street: string;
-	number: string;
-	neighbourhood: string;
-	city: string;
-	uf: string;
-	cep: string;
-}
-
-interface UpdatedInfo {
-	user?: UserData;
-	address?: AddressData;
-}
+import { UserData, AddressData, UpdatedInfo } from "@domain/types";
 
 async function create(userData: UserData, addressData: AddressData) {
 	const { name, email, password, age } = userData;
