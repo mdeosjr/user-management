@@ -109,7 +109,8 @@
 			"@controllers/*": ["./src/interfaces/controllers/*"],
 			"@domain/*": ["./src/domain/*"],
 			"@services/*": ["./src/app/*"],
-			"@infra/*": ["./src/infra/*"]
+			"@infra/*": ["./src/infra/*"],
+			"@middlewares/*": ["./src/middlewares/*"]
 		}
 	}
 }
