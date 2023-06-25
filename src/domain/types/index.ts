@@ -3,18 +3,14 @@ export interface UserData {
 	email: string;
 	password: string;
 	age: number;
+	address: AddressData;
 }
 
 export interface AddressData {
 	street: string;
 	number: string;
-	neighbourhood: string;
+	neighborhood: string;
 	city: string;
 	uf: string;
 	cep: string;
-}
-
-export interface UpdatedInfo {
-	user?: UserData;
-	address?: AddressData;
 }
