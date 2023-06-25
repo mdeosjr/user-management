@@ -9,10 +9,19 @@ export async function createUser(req: Request, res: Response) {
 }
 
 export async function updateUser(req: Request, res: Response) {
-	const updatedInfo = req.body;
+	const updatedUser = req.body;
 	const authorization = req.headers.authorization;
 	const token = authorization?.replace("Bearer ", "") as string;
 
-  await userService.update(updatedInfo, token);
+  await userService.updateUser(updatedUser, token);
   res.sendStatus(200);
+}
+
+export async function updateAddress(req: Request, res: Response) {
+	const updatedAddress = req.body;
+	const authorization = req.headers.authorization;
+	const token = authorization?.replace("Bearer ", "") as string;
+
+	await userService.updateAddress(updatedAddress, token);
+	res.sendStatus(200);
 }

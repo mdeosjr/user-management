@@ -1,14 +1,9 @@
-import { Address } from "@prisma/client";
 import { prisma } from "@infra/database";
-import { UserData, AddressData } from "@services/userService";
+import { UserData } from "@domain/types";
+import { User } from "@prisma/client";
 
-async function create(userData: UserData, addressData: AddressData) {
-	const { name, email, password, age } = userData;
-	const { number, cep } = addressData;
-
-	const address: Address | null = await prisma.address.findFirst({
-		where: { cep, number },
-	});
+async function create(userData: UserData) {
+	const { name, email, password, age, address } = userData;
 
 	return await prisma.user.create({
 		data: {
@@ -17,20 +12,38 @@ async function create(userData: UserData, addressData: AddressData) {
 			password,
 			age,
 			address: {
-				connectOrCreate: {
-					where: { id: address?.id || 0 },
-					create: addressData,
-				},
+				create: address,
 			},
 		},
 	});
 }
 
 async function get(email: string) {
-	return await prisma.user.findUnique({ where: { email } });
+	return await prisma.user.findUnique({
+		where: { email },
+		include: { address: true },
+	});
+}
+
+async function update(data: UserData) {
+	const { address, ...user } = data;
+
+	return await prisma.user.update({
+		where: { email: user.email },
+		data: {
+			name: user.name,
+			email: user.email,
+			password: user.password,
+			age: user.age,
+			address: {
+				update: address,
+			},
+		},
+	});
 }
 
 export const userRepository = {
 	create,
-	get
+	get,
+	update,
 };
