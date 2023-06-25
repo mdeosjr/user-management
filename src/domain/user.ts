@@ -1,55 +1,50 @@
-import { AddressData, UserData } from "@services/userService";
+import { AddressData } from "@domain/types";
 import { userRepository } from "@infra/userRepository";
-import bcrypt from "bcrypt";
+import { Address } from "./address";
 
 export class User {
 	name: string;
 	email: string;
 	password: string;
 	age: number;
-	address: AddressData;
+	address: Address;
 
 	constructor(
 		name: string,
 		email: string,
-		password: string,
 		age: number,
-		address: AddressData
+		address: AddressData,
+		password: string
 	) {
 		this.validateAge(age);
 		this.name = name;
 		this.email = email;
 		this.password = password;
 		this.age = age;
-		this.address = address;
+		this.address = new Address(
+			address.street,
+			address.number,
+			address.neighborhood,
+			address.city,
+			address.uf,
+			address.cep
+		);
 	}
 
 	validateAge(age: number): void {
-		if (age < 18) {
-			throw new Error("You must be at least 18");
-		}
-	}
-
-	userObject(): UserData {
-		return {
-			name: this.name,
-			email: this.email,
-			password: this.password,
-			age: this.age,
-		};
+		if (age < 18)
+			throw { type: "conflict", message: "You must be at least 18!" };
 	}
 
 	async save(): Promise<void> {
-		const user = this.userObject();
+		const existentUser = await userRepository.get(this.email);
+		if (existentUser)
+			throw { type: "conflict", message: "User already exists!" };
 
-		const existentUser = await userRepository.get(user.email);
-		if (existentUser) throw new Error("User already exists!");
+		await userRepository.create(this);
+	}
 
-		const hashPassword = bcrypt.hashSync(user.password, 8);
-
-		await userRepository.create(
-			{ ...user, password: hashPassword },
-			this.address
-		);
+	async update() {
+		await userRepository.update(this);
 	}
 }
