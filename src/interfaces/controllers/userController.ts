@@ -13,7 +13,13 @@ export async function getUser(req: Request, res: Response) {
 	const token = authorization?.replace("Bearer ", "") as string;
 
 	const user = await userService.getUser(token);
-	res.status(200).send(user);
+	const { address, ...userData } = user;
+	res.status(200).send({
+		name: userData.name,
+		email: userData.email,
+		age: userData.age,
+		address,
+	});
 }
 
 export async function updateUser(req: Request, res: Response) {
@@ -21,8 +27,8 @@ export async function updateUser(req: Request, res: Response) {
 	const authorization = req.headers.authorization;
 	const token = authorization?.replace("Bearer ", "") as string;
 
-  await userService.updateUser(updatedUser, token);
-  res.sendStatus(200);
+	await userService.updateUser(updatedUser, token);
+	res.sendStatus(200);
 }
 
 export async function updateAddress(req: Request, res: Response) {
