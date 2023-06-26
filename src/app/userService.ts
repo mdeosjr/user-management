@@ -27,7 +27,7 @@ async function updateUser(updatedUser: UserData, token: string) {
 	const existentUser = await userRepository.get(updatedUser.email);
 
 	if (!existentUser)
-		throw { type: "conflict", message: "User already exists!" };
+		throw { type: "conflict", message: "You cant update this user!" };
 
 	const { address, ...user } = existentUser;
 

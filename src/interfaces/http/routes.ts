@@ -5,7 +5,7 @@ import * as authController from "@controllers/authController";
 const router = Router();
 
 router.post('/users', userController.createUser);
-router.put('/users', userController.updateUser);
+router.patch('/users', userController.updateUser);
 router.post('/login', authController.login);
 router.put('/address', userController.updateAddress);
 router.get('/me', userController.getUser)
