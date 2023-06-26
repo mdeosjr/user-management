@@ -4,7 +4,7 @@ import { UserData, AddressData } from "@domain/types";
 import bcrypt from "bcrypt";
 import { userRepository } from "@infra/userRepository";
 
-async function create(userData: UserData, addressData: AddressData) {
+async function createUser(userData: UserData, addressData: AddressData) {
 	const { name, email, password, age } = userData;
 
 	const hashPassword = bcrypt.hashSync(password, 8);
@@ -13,9 +13,18 @@ async function create(userData: UserData, addressData: AddressData) {
 	await user.save();
 }
 
+async function getUser(token: string) {
+	console.log(token)
+	const auth = new Auth();
+	const user = await auth.validate(token)
+
+	console.log(user);
+	return user;
+}
+
 async function updateUser(updatedUser: UserData, token: string) {
 	const auth = new Auth();
-	auth.validate(token);
+	await auth.validate(token);
 
 	const existentUser = await userRepository.get(updatedUser.email);
 
@@ -56,7 +65,8 @@ async function updateAddress(updatedAddress: UserData, token: string) {
 }
 
 export const userService = {
-	create,
+	createUser,
+	getUser,
 	updateUser,
 	updateAddress,
 };

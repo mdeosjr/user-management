@@ -4,8 +4,16 @@ import { userService } from "@services/userService";
 export async function createUser(req: Request, res: Response) {
 	const { address, ...user } = req.body;
 
-	await userService.create(user, address);
+	await userService.createUser(user, address);
 	res.sendStatus(201);
+}
+
+export async function getUser(req: Request, res: Response) {
+	const authorization = req.headers.authorization;
+	const token = authorization?.replace("Bearer ", "") as string;
+
+	const user = await userService.getUser(token);
+	res.status(200).send(user);
 }
 
 export async function updateUser(req: Request, res: Response) {
