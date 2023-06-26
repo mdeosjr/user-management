@@ -14,11 +14,9 @@ async function createUser(userData: UserData, addressData: AddressData) {
 }
 
 async function getUser(token: string) {
-	console.log(token)
 	const auth = new Auth();
-	const user = await auth.validate(token)
+	const user = await auth.validate(token);
 
-	console.log(user);
 	return user;
 }
 
@@ -28,7 +26,8 @@ async function updateUser(updatedUser: UserData, token: string) {
 
 	const existentUser = await userRepository.get(updatedUser.email);
 
-	if (!existentUser) throw { type: "conflict", message: "User already exists!" };
+	if (!existentUser)
+		throw { type: "conflict", message: "User already exists!" };
 
 	const { address, ...user } = existentUser;
 
