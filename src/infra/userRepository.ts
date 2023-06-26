@@ -1,18 +1,25 @@
 import { prisma } from "@infra/database";
 import { UserData } from "@domain/types";
-import { User } from "@prisma/client";
 
 async function create(userData: UserData) {
 	const { name, email, password, age, address } = userData;
+	const { cep, city, neighborhood, number, street, uf } = address;
 
 	return await prisma.user.create({
 		data: {
 			name,
 			email,
 			password,
-			age,
+			age: Number(age),
 			address: {
-				create: address,
+				create: {
+					cep,
+					city,
+					neighborhood,
+					number,
+					street,
+					uf,
+				},
 			},
 		},
 	});
